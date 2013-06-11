@@ -22,20 +22,40 @@ function sendMail(info, tab) {
 }
 
 function mimeWordEncode(string) {
-  // =? charset ? Q or B ? string ?=
-  var docCharSet = document.defaultCharset;
-  return "=?"+ docCharSet +"?Q?" + escape(string) + "?=";
+
+  if (getEncodingOption()) {
+    // Uses MIME encoded-word syntax as described here https://en.wikipedia.org/wiki/MIME#Encoded-Word
+    // E.g. UTF-8 or iso-8859-1
+    var charset = document.defaultCharset;
+    // Q for quoted printable encoding and B for base64 encoding
+    var encoding = "Q";
+    var encodedText = escape(string);
+    // =? charset ? Q or B ? string ?=
+    return "=?"+ charset +"?"+encoding+"?" + encodedText + "?=";
+  } else {
+    return escape(string);
+  }
+
+}
+
+function getEncodingOption() {
+  return getCheckboxOption("encoding");
+
 }
 
 function getWebmailOption() {
-  var isWebmail = localStorage["webmail"];
-  if (typeof(isWebmail) == 'undefined' || isWebmail == 'false') {
-    console.log("Webmail disabled.");
+  return getCheckboxOption("webmail");
+}
+
+function getCheckboxOption(name) {
+  var option = localStorage[name];
+  if (typeof(option) == 'undefined' || option == 'false') {
+    console.log(name + " disabled.");
     return false;
   } else {
-    console.log("Webmail enabled.");
+    console.log(name + " enabled.");
     return true;
-  }  
+  }
 }
 
 function getCloseTimeoutOption() {

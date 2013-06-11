@@ -3,6 +3,7 @@
       console.log("Saving options...");
       localStorage["webmail"] = document.getElementById("input_webmail").checked;
       localStorage["ms_until_close"] = document.getElementById("ms_until_close").value;
+      localStorage["encoding"] = document.getElementById("input_encoding").checked;
 
       options_saved();
     }
@@ -17,9 +18,10 @@
       }
     
     function reset_options() {
+      document.getElementById("input_encoding").checked = false;
       document.getElementById("input_webmail").checked = false;
       input_webmail_changed();
-      document.getElementById(	"ms_until_close").value = 1000;
+      document.getElementById"ms_until_close").value = 1000;
       ms_until_close_changed();
     }
 
@@ -28,7 +30,19 @@
       restore_webmail();
       restore_ms_until_close();
     }
-    
+
+    function restore_encoding() {
+          console.log("restoring encoding option");
+          var encoding = localStorage["encoding"];
+          if (typeof(encoding) == 'undefined' || encoding == 'false') {
+            encoding = false;
+          } else {
+            encoding = true;
+          }
+          var checkbox = document.getElementById("input_encoding");
+          checkbox.checked = encoding;
+        }
+
     function restore_webmail() {
       console.log("restoring webmail option");
       var webmail = localStorage["webmail"];
